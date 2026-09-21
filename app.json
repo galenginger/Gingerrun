@@ -3,9 +3,11 @@
     "name": "GingerRun",
     "slug": "GingerRun",
     "version": "1.0.0",
+    "scheme": "gingerrun",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
     },
@@ -20,6 +22,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": ["expo-router"]
   }
 }
