@@ -164,3 +164,32 @@ och öppnade igen — rundan fanns kvar i listan.
 Bytte useState<Run[]>(mockRuns) mot useState<Run[]>(loadRuns) i
 index.tsx (lazy initializer-mönstret, utan att anropa funktionen
 direkt).
+
+---
+
+## 2026-09-22 – Väder från Open-Meteo (VG: Web API)
+
+**Vad jag bad om:**
+Hämta väderdata baserat på positionen som redan sparas på rundan, och
+visa den på detaljsidan — Fas 4/VG-kravet på ett Web API-anrop.
+
+**Vad AI:n gav mig / gjorde:**
+- weather-fält (tempC, windSpeedMs) på Run-typen (types/run.ts)
+- getCurrentWeather()-funktion i new-run.tsx: fetch mot Open-Meteos
+  gratis API (ingen nyckel behövs), tar ut temperatur och vindstyrka
+  ur JSON-svaret
+- Kopplade in anropet i "Spara löprunda": hämtar väder automatiskt om
+  position finns, sparar det på newRun-objektet
+- TODO (DU) i run/[id].tsx för att visa run.weather
+
+**Hur jag verifierade det:**
+Hämtade position i ny-runda-formuläret, sparade en runda, gick in på
+den och såg temperatur och vind visas på detaljsidan.
+
+**Vad jag ändrade eller la till själv:**
+Skrev {run.weather && (...)}-blocket i run/[id].tsx som visar
+temperatur och vindstyrka, samma villkorliga mönster som
+run.location. Fick reda ut några JSX-strul på vägen (en extra
+oavslutad <View>, saknad stängning av både villkorsblocket och hela
+return-satsen). Lade även till en "Koordinater:"-etikett framför
+platsen på egen hand.
