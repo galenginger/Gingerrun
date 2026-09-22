@@ -81,3 +81,34 @@ båda TextInput-fälten i new-run.tsx, useLocalSearchParams()+find() i
 run/[id].tsx, samt hela onPress-logiken i new-run.tsx (bygga Run-objekt
 med parseFloat/parseInt, anropa addRun, router.back()) och
 setRuns([...mockRuns]) i useFocusEffect.
+
+---
+
+## 2026-09-22 – Position med expo-location
+
+**Vad jag bad om:**
+Lägga till expo-location som fjärde Expo SDK-modul: hämta position när
+man skapar en löprunda, spara den på rundan, och visa den på både
+ny-runda-skärmen och detaljsidan.
+
+**Vad AI:n gav mig / gjorde:**
+- Installerade expo-location (fick lösa en npm-peer-konflikt med
+  --legacy-peer-deps, orelaterad till själva paketet)
+- Config-plugin i app.json med behörighetstext
+- `location`-fält på Run-typen (types/run.ts)
+- `getCurrentLocation()`-hjälpfunktion i new-run.tsx (permission +
+  getCurrentPositionAsync, ren Expo SDK-boilerplate)
+- TODO (DU) för useState och en Pressable som hämtar/sparar position
+
+**Hur jag verifierade det:**
+Körde appen i Expo Go, tryckte "Hämta position", såg koordinaterna
+skrivas ut, sparade en runda och kollade att positionen syntes på
+detaljsidan för den rundan.
+
+**Vad jag ändrade eller la till själv:**
+Skrev useState för location, Pressable-knappen med async onPress som
+anropar getCurrentLocation() och setLocation(), villkorlig text
+({location ? ... : ...}) för att visa koordinaterna, lade till
+location i newRun-objektet, och villkorlig rendering ({run.location &&
+...}) på detaljsidan. Fick fixa flera syntaxfel själv på vägen
+(fel useState-typ, ihopblandad Pressable/onPress-syntax).
