@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import * as Haptics from "expo-haptics";
 import * as Location from "expo-location";
+import { Accelerometer } from "expo-sensors";
 import { addRun } from "../data/mockRuns";
 import { Run } from "../types/run";
 
 type Coords = { latitude: number; longitude: number };
+
+// Hur kraftig rörelse (i g) som räknas som en skakning, och hur lång
+// paus (ms) som måste gå mellan två skakningar så det inte triggar flera
+// gånger på en enda rörelse.
+const SHAKE_THRESHOLD = 1.7;
+const SHAKE_COOLDOWN_MS = 1000;
 
 // Frågar om lov och hämtar nuvarande position. Expo SDK-boilerplate:
 // två await-anrop mot expo-location, inget att skriva själv här.
@@ -26,6 +33,30 @@ export default function NewRunScreen() {
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
   const [location, setLocation] = useState<Coords | null>(null);
+  const lastShakeAt = useRef(0);
+
+  // Prenumererar på accelerometern och räknar ut "rörelsestyrkan" (g).
+  // Expo SDK-boilerplate (subscription + cleanup), inget att skriva
+  // själv här — TODO:n finns i clearForm() nedan istället.
+  useEffect(() => {
+    Accelerometer.setUpdateInterval(200);
+    const subscription = Accelerometer.addListener(({ x, y, z }) => {
+      const strength = Math.sqrt(x * x + y * y + z * z);
+      const now = Date.now();
+      if (strength > SHAKE_THRESHOLD && now - lastShakeAt.current > SHAKE_COOLDOWN_MS) {
+        lastShakeAt.current = now;
+        clearForm();
+      }
+    });
+    return () => subscription.remove();
+  }, []);
+
+  function clearForm() {
+    setDistance("");
+    setDuration("");
+    setLocation(null);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+  }
 
   return (
     <View style={styles.container}>
