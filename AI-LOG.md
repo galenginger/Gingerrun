@@ -24,6 +24,9 @@ Mall att kopiera för varje ny rad:
 
 ---
 
+
+
+
 ## 2026-09-21 – Projektuppsättning
 
 **Vad jag bad om:**
@@ -47,3 +50,34 @@ och läst igenom filerna.)
 
 **Vad jag ändrade eller la till själv:**
 (Fyll i när du skrivit klart de tre TODO:s i app/index.tsx.)
+
+---
+
+## 2026-09-22 – Ny-runda-skärm, detaljsida och riktig sparning
+
+**Vad jag bad om:**
+Skelett för app/new-run.tsx (formulär) och app/run/[id].tsx (detaljsida),
+samt att koppla ihop "Spara löprunda" så den faktiskt lägger till rundan
+i listan på startsidan (inte bara console.log).
+
+**Vad AI:n gav mig / gjorde:**
+- Skelett för new-run.tsx och run/[id].tsx med TODO (DU) för
+  useState/TextInput, useLocalSearchParams och Array.find()
+- data/mockRuns.ts flyttades ut från index.tsx så flera skärmar kan
+  dela samma testdata, plus en addRun()-hjälpfunktion
+- useFocusEffect-uppsättning i index.tsx (boilerplate) så listan läser
+  om mockRuns när man navigerar tillbaka från new-run
+
+
+**Hur jag verifierade det:**
+Körde appen i Expo Go på telefonen. Testade hela flödet: skrev in
+distans/tid, tryckte Spara, såg att jag hamnade tillbaka på startsidan
+och att den nya rundan syntes i listan. Testade även att trycka på en
+runda och komma till rätt detaljsida.
+
+**Vad jag ändrade eller la till själv:**
+Skrev useState-raderna, FlatList- och Pressable-JSX:en i index.tsx,
+båda TextInput-fälten i new-run.tsx, useLocalSearchParams()+find() i
+run/[id].tsx, samt hela onPress-logiken i new-run.tsx (bygga Run-objekt
+med parseFloat/parseInt, anropa addRun, router.back()) och
+setRuns([...mockRuns]) i useFocusEffect.
