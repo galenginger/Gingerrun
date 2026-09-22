@@ -17,35 +17,24 @@ export default function HomeScreen() {
   //
   // Ledtråd: const [namn, setNamn] = useState<Typ>(startvärde)
   //
-  // const [runs, setRuns] = useState<Run[]>(???);
+  const [runs, setRuns] = useState<Run[]>(mockRuns);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>GingerRun</Text>
-
-      {/*
-        TODO (DU): Rendera listan med löprundor med FlatList.
-        - data={runs}
-        - keyExtractor={(item) => item.id}
-        - renderItem={({ item }) => (
-            <RunListItem
-              run={item}
-              onPress={() => router.push(`/run/${item.id}`)}
-            />
-          )}
-
-        Ledtråd: FlatList tar samma props som du ser i punktlistan ovan.
-        Testa gärna: console.log(item) inuti renderItem om du vill se
-        vad som skickas in innan du skriver klart.
-      */}
-
-      {/* TODO (DU): Skapa en knapp med Pressable som navigerar till
-          "/new-run" när man trycker på den (den skärmen bygger vi näst).
-          Ledtråd:
-          <Pressable style={styles.button} onPress={() => router.push("/new-run")}>
-            <Text style={styles.buttonText}>+ Ny löprunda</Text>
-          </Pressable>
-      */}
+      <FlatList
+        data={runs}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <RunListItem
+            run={item}
+            onPress={() => router.push(`/run/${item.id}`)}
+          />
+        )}
+      />
+      <Pressable style={styles.button} onPress={() => router.push("/new-run")}>
+        <Text style={styles.buttonText}> + Ny Löprunda!</Text>
+      </Pressable>
     </View>
   );
 }
