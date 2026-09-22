@@ -112,3 +112,55 @@ anropar getCurrentLocation() och setLocation(), villkorlig text
 location i newRun-objektet, och villkorlig rendering ({run.location &&
 ...}) på detaljsidan. Fick fixa flera syntaxfel själv på vägen
 (fel useState-typ, ihopblandad Pressable/onPress-syntax).
+
+---
+
+## 2026-09-22 – expo-notifications bytt mot expo-sensors
+
+**Vad jag bad om:**
+En tredje Expo SDK-modul: lokal påminnelse om löpträning med
+expo-notifications, enligt projektplanen.
+
+**Vad AI:n gav mig / gjorde:**
+- Installerade expo-notifications, satte upp notification handler i
+  _layout.tsx och en scheduleRunReminder()-helper i index.tsx
+- Upptäckte i test att Expo Go på Android inte stödjer
+  expo-notifications alls sedan SDK 53 (kräver development build) —
+  städade bort allt det igen (import, helper, knapp, config-plugin,
+  avinstallerade paketet)
+- Byggde om till expo-sensors istället: Accelerometer-prenumeration
+  (useEffect + cleanup) i new-run.tsx som känner av skakning
+- TODO (DU) i clearForm()
+
+**Hur jag verifierade det:**
+Körde appen i Expo Go, skrev in distans/tid, hämtade position, skakade
+telefonen och såg att fälten nollställdes med en vibration.
+
+**Vad jag ändrade eller la till själv:**
+Skrev de tre setter-anropen i clearForm() (setDistance, setDuration,
+setLocation) och Haptics-raden för bekräftelse.
+
+---
+
+## 2026-09-22 – Spara rundor på disk med expo-file-system
+
+**Vad jag bad om:**
+Fjärde Expo SDK-modul. Löprundorna sparades bara i minnet och
+försvann när appen stängdes helt — ville lösa det på riktigt.
+
+**Vad AI:n gav mig / gjorde:**
+- Installerade expo-file-system
+- loadRuns() och saveRuns()-logik i data/mockRuns.ts (nya synkrona
+  File/Paths-API:et i SDK 57: exists, textSync, write, create) som
+  läser/skriver en runs.json i appens dokumentmapp
+- addRun() uppdaterad att spara till disk vid varje ny runda
+- TODO (DU) för useState-startvärdet i index.tsx
+
+**Hur jag verifierade det:**
+Körde appen, sparade en runda, stängde appen helt (svepte bort den)
+och öppnade igen — rundan fanns kvar i listan.
+
+**Vad jag ändrade eller la till själv:**
+Bytte useState<Run[]>(mockRuns) mot useState<Run[]>(loadRuns) i
+index.tsx (lazy initializer-mönstret, utan att anropa funktionen
+direkt).

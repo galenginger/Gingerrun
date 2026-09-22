@@ -3,10 +3,10 @@ import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import RunListItem from "../components/RunListItem";
 import { Run } from "../types/run";
-import { mockRuns } from "../data/mockRuns";
+import { loadRuns, mockRuns } from "../data/mockRuns";
 
 export default function HomeScreen() {
-  const [runs, setRuns] = useState<Run[]>(mockRuns);
+  const [runs, setRuns] = useState<Run[]>(loadRuns);
 
   useFocusEffect(
     useCallback(() => {
