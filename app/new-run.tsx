@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
+import { addRun } from "../data/mockRuns";
+import { Run } from "../types/run";
 
-// Den här skärmen tar bara emot input än så länge. Vi kopplar ihop den med
-// riktig sparning (dvs. lägga till rundan i listan på startsidan) när vi
-// har gått igenom hur man delar state mellan skärmar.
 export default function NewRunScreen() {
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
@@ -31,10 +30,14 @@ export default function NewRunScreen() {
       <Pressable
         style={styles.button}
         onPress={() => {
-          // Steget "spara till listan" bygger vi när vi lärt oss dela
-          // state mellan skärmar. Just nu går vi bara tillbaka.
-          console.log("Sparar runda:", distance, duration);
-          router.back();
+            const newRun: Run = {
+                id: Date.now().toString(), // Enkelt unikt id.
+                date: new Date().toISOString().slice(0, 10), // Dagens Datum
+                distanceKm: parseFloat(distance) || 0, // Text -> Nummer
+                durationMin: parseInt(duration, 10) || 0,
+            };
+            addRun(newRun);
+            router.back();
         }}
       >
         <Text style={styles.buttonText}>Spara löprunda</Text>
