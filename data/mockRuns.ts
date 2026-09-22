@@ -8,3 +8,11 @@ export const mockRuns: Run[] = [
   { id: "1", date: "2026-09-18", distanceKm: 5.2, durationMin: 28 },
   { id: "2", date: "2026-09-20", distanceKm: 10.1, durationMin: 58 },
 ];
+
+// Lägger till en ny runda överst i listan. Muterar mockRuns direkt (i
+// stället för att skapa en ny array) eftersom det är samma array-referens
+// som index.tsx läser från - enklaste sättet att "spara" utan en riktig
+// databas eller delat state mellan skärmar.
+export function addRun(run: Run) {
+  mockRuns.unshift(run);
+}
