@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
+import * as Haptics from "expo-haptics";
 import { addRun } from "../data/mockRuns";
 import { Run } from "../types/run";
 
@@ -37,6 +38,12 @@ export default function NewRunScreen() {
                 durationMin: parseInt(duration, 10) || 0,
             };
             addRun(newRun);
+            
+            // console.log("Provar haptics...");
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+              // .then(() => console.log("Haptics klart"))
+              // .catch((err) => console.log("Haptics fel:", err));
+
             router.back();
         }}
       >
