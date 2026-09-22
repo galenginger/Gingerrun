@@ -23,11 +23,18 @@ export default function RunDetailScreen() {
       <Text style={styles.stat}>{run.distanceKm} km</Text>
       <Text style={styles.stat}>{run.durationMin} min</Text>
       {run.location && (
+        
         <Text style={styles.date}>
-          {run.location.latitude}, {run.location.longitude}
+         Kordinater: {run.location.latitude}, {run.location.longitude}
         </Text>
       )}
-    </View>
+
+      {run.weather && (
+      <Text style={styles.date}>
+      Väder: {run.weather.tempC}°C, vind {run.weather.windSpeedMs} m/s
+      </Text>
+      )}
+      </View>
   );
 }
 

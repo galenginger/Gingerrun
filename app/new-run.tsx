@@ -8,6 +8,7 @@ import { addRun } from "../data/mockRuns";
 import { Run } from "../types/run";
 
 type Coords = { latitude: number; longitude: number };
+type Weather = { tempC: number; windSpeedMs: number };
 
 // Hur kraftig rörelse (i g) som räknas som en skakning, och hur lång
 // paus (ms) som måste gå mellan två skakningar så det inte triggar flera
@@ -27,6 +28,22 @@ async function getCurrentLocation(): Promise<Coords | null> {
     latitude: position.coords.latitude,
     longitude: position.coords.longitude,
   };
+}
+
+// Hämtar aktuellt väder för en position från Open-Meteo (gratis, ingen
+// API-nyckel behövs). Web API-anrop + JSON-hantering, ren boilerplate.
+async function getCurrentWeather(coords: Coords): Promise<Weather | null> {
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&current_weather=true`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return {
+      tempC: data.current_weather.temperature,
+      windSpeedMs: data.current_weather.windspeed,
+    };
+  } catch {
+    return null;
+  }
 }
 
 export default function NewRunScreen() {
@@ -94,13 +111,16 @@ export default function NewRunScreen() {
 
       <Pressable
         style={styles.button}
-        onPress={() => {
+        onPress={async () => {
+          const weather = location ? await getCurrentWeather(location) : null;
+
           const newRun: Run = {
             id: Date.now().toString(), // Enkelt unikt id.
             date: new Date().toISOString().slice(0, 10), // Dagens Datum
             distanceKm: parseFloat(distance) || 0, // Text -> Nummer
             durationMin: parseInt(duration, 10) || 0,
             location: location ?? undefined, // Platstjänster
+            weather: weather ?? undefined,
           };
           addRun(newRun);
 
