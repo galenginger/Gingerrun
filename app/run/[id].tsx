@@ -6,7 +6,6 @@ import { useLocalSearchParams } from "expo-router";
 // t.ex. /run/1 och /run/2 mot samma fil, och skickar med "1" eller "2"
 // som en URL-parameter vi kan läsa ut.
 export default function RunDetailScreen() {
-
   const { id } = useLocalSearchParams();
   const run = mockRuns.find((r) => r.id === id);
 
@@ -23,6 +22,11 @@ export default function RunDetailScreen() {
       <Text style={styles.date}>{run.date}</Text>
       <Text style={styles.stat}>{run.distanceKm} km</Text>
       <Text style={styles.stat}>{run.durationMin} min</Text>
+      {run.location && (
+        <Text style={styles.date}>
+          {run.location.latitude}, {run.location.longitude}
+        </Text>
+      )}
     </View>
   );
 }
