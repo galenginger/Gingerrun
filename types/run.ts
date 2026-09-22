@@ -5,4 +5,5 @@ export type Run = {
   date: string; // ISO-datum, t.ex. "2026-09-22"
   distanceKm: number;
   durationMin: number;
+  location?: { latitude: number; longitude: number };
 };

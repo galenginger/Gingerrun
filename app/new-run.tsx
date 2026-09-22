@@ -2,12 +2,30 @@ import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import * as Haptics from "expo-haptics";
+import * as Location from "expo-location";
 import { addRun } from "../data/mockRuns";
 import { Run } from "../types/run";
+
+type Coords = { latitude: number; longitude: number };
+
+// Frågar om lov och hämtar nuvarande position. Expo SDK-boilerplate:
+// två await-anrop mot expo-location, inget att skriva själv här.
+async function getCurrentLocation(): Promise<Coords | null> {
+  const { status } = await Location.requestForegroundPermissionsAsync();
+  if (status !== "granted") {
+    return null;
+  }
+  const position = await Location.getCurrentPositionAsync({});
+  return {
+    latitude: position.coords.latitude,
+    longitude: position.coords.longitude,
+  };
+}
 
 export default function NewRunScreen() {
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
+  const [location, setLocation] = useState<Coords | null>(null);
 
   return (
     <View style={styles.container}>
@@ -30,21 +48,37 @@ export default function NewRunScreen() {
 
       <Pressable
         style={styles.button}
-        onPress={() => {
-            const newRun: Run = {
-                id: Date.now().toString(), // Enkelt unikt id.
-                date: new Date().toISOString().slice(0, 10), // Dagens Datum
-                distanceKm: parseFloat(distance) || 0, // Text -> Nummer
-                durationMin: parseInt(duration, 10) || 0,
-            };
-            addRun(newRun);
-            
-            // console.log("Provar haptics...");
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
-              // .then(() => console.log("Haptics klart"))
-              // .catch((err) => console.log("Haptics fel:", err));
+        onPress={async () => {
+          const result = await getCurrentLocation();
+          setLocation(result);
+        }}
+      >
+        <Text style={styles.buttonText}>Hämta position</Text>
+      </Pressable>
+      <Text style={styles.label}>
+        {location
+          ? `${location.latitude}, ${location.longitude}`
+          : "Ingen position hämtad"}
+      </Text>
 
-            router.back();
+      <Pressable
+        style={styles.button}
+        onPress={() => {
+          const newRun: Run = {
+            id: Date.now().toString(), // Enkelt unikt id.
+            date: new Date().toISOString().slice(0, 10), // Dagens Datum
+            distanceKm: parseFloat(distance) || 0, // Text -> Nummer
+            durationMin: parseInt(duration, 10) || 0,
+            location: location ?? undefined, // Platstjänster
+          };
+          addRun(newRun);
+
+          // console.log("Provar haptics...");
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+          // .then(() => console.log("Haptics klart"))
+          // .catch((err) => console.log("Haptics fel:", err));
+
+          router.back();
         }}
       >
         <Text style={styles.buttonText}>Spara löprunda</Text>
