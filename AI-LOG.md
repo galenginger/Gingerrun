@@ -45,11 +45,16 @@ skriva själv (useState, FlatList, Pressable/navigation).
 - `CLAUDE.md` och den här filen
 
 **Hur jag verifierade det:**
-(Fyll i här när du kört `npx expo start` och sett att startsidan laddar,
-och läst igenom filerna.)
+Körde `npx expo start` och öppnade appen i Expo Go. Såg att startsidan
+laddade med listan över testrundorna, att ett tryck på en runda
+navigerade vidare och att knappen tog mig till ny-runda-skärmen. Läste
+också igenom filerna AI:n skapat.
 
 **Vad jag ändrade eller la till själv:**
-(Fyll i när du skrivit klart de tre TODO:s i app/index.tsx.)
+Skrev de tre TODO:s i app/index.tsx: useState<Run[]> som håller listan
+med löprundor (startvärde mockRuns), FlatList som renderar
+RunListItem för varje runda och navigerar till detaljsidan vid tryck,
+och en Pressable-knapp som navigerar till /new-run.
 
 ---
 
