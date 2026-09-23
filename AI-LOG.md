@@ -313,3 +313,27 @@ en väderapp.
 **Vad jag ändrade eller la till själv:**
 Lade till &windspeed_unit=ms i slutet av URL:en i
 getCurrentWeather() i new-run.tsx.
+
+---
+
+## 2026-09-23 – Tydligare filstruktur: services/
+
+**Vad jag bad om:**
+Frågade om koden kunde delas upp bättre. new-run.tsx innehöll både
+skärmen och två hjälpfunktioner som inte har med UI att göra.
+
+**Vad AI:n gav mig / gjorde:**
+- Förklarade att allt i app/ blir en skärm i Expo Router, så annan kod
+  ska ligga utanför app/
+- Flyttade getCurrentLocation() till services/location.ts och
+  getCurrentWeather() till services/weather.ts, och lade till export
+- Flyttade typerna Coords och Weather till types/run.ts
+- TODO (DU) för import-raderna i new-run.tsx
+
+**Hur jag verifierade det:**
+Körde npx tsc --noEmit (inga fel), startade appen och testade att hämta
+position och spara en runda med väder.
+
+**Vad jag ändrade eller la till själv:**
+Skrev import-raderna för Coords, getCurrentLocation och
+getCurrentWeather i new-run.tsx.

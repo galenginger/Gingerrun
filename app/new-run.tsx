@@ -2,70 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import * as Haptics from "expo-haptics";
-import * as Location from "expo-location";
 import { Accelerometer } from "expo-sensors";
 import ConfettiCannon from "react-native-confetti-cannon";
 import { addRun } from "../data/mockRuns";
 import { Run } from "../types/run";
-
-type Coords = { latitude: number; longitude: number };
-type Weather = { tempC: number; windSpeedMs: number };
+import { Coords } from "../types/run";
+import { getCurrentWeather } from "../services/weather";
+import { getCurrentLocation } from "../services/location";
 
 // Hur kraftig rörelse (i g) som räknas som en skakning, och hur lång
 // paus (ms) som måste gå mellan två skakningar så det inte triggar flera
 // gånger på en enda rörelse.
 const SHAKE_THRESHOLD = 1.7;
 const SHAKE_COOLDOWN_MS = 1000;
-
-// Frågar om lov och hämtar nuvarande position. Expo SDK-boilerplate:
-// två await-anrop mot expo-location, inget att skriva själv här.
-async function getCurrentLocation(): Promise<Coords | null> {
-  const { status } = await Location.requestForegroundPermissionsAsync();
-  if (status !== "granted") return null;
-
-  // Läser telefonens senast kända (cachade) position. Svarar direkt och
-  // väcker aldrig GPS:en - det är GPS-fixen som kan hänga sig och kräva
-  // omstart av appen, så vi ber bara om en ny fix när cachen är tom.
-  const lastKnown = await Location.getLastKnownPositionAsync();
-
-  if (lastKnown) {
-    return {
-      latitude: lastKnown.coords.latitude,
-      longitude: lastKnown.coords.longitude,
-    };
-  }
-
-  try {
-    const position = await Promise.race([
-      Location.getCurrentPositionAsync({}),
-      new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error("Timeout")), 8000),
-      ),
-    ]);
-    return {
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-    };
-  } catch {
-    return null;
-  }
-}
-
-// Hämtar aktuellt väder för en position från Open-Meteo (gratis, ingen
-// API-nyckel behövs). Web API-anrop + JSON-hantering, ren boilerplate.
-async function getCurrentWeather(coords: Coords): Promise<Weather | null> {
-  try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&current_weather=true&windspeed_unit=ms`;
-    const response = await fetch(url);
-    const data = await response.json();
-    return {
-      tempC: data.current_weather.temperature,
-      windSpeedMs: data.current_weather.windspeed,
-    };
-  } catch {
-    return null;
-  }
-}
 
 export default function NewRunScreen() {
   const [distance, setDistance] = useState("");
