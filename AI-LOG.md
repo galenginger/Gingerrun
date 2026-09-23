@@ -259,3 +259,32 @@ Körde felsökningen och läste loggarna, och kunde förklara varför
 if (lastKnown)-blocket måste ligga före try-blocket: return avbryter
 funktionen direkt, så cachen måste kollas innan reservlösningen med
 den långsamma GPS-fixen körs.
+
+---
+
+## 2026-09-23 – Ta bort runda, safe area-fix och knapptexter
+
+**Vad jag bad om:**
+Tips på hur jag kunde lösa det innan jag började koda: ta bort en
+sparad runda, och knappen på startsidan som hamnade under
+hemknappsraden.
+
+**Vad AI:n gav mig / gjorde:**
+Bara tips och ledtrådar, ingen färdig kod. All kod i commitsen
+(a038be0, 6cb9b17, 4f959d6) skrev jag själv. AI:n sammanfattade
+också commitsen till den här loggposten i efterhand.
+
+**Hur jag verifierade det:**
+Provkörde hela flödet i Expo Go: skapade en runda, gick in på den,
+tog bort den och såg att den försvann ur listan. Kollade också att
+knappen på startsidan inte längre hamnade under hemknappsraden.
+
+**Vad jag ändrade eller la till själv:**
+- `deleteRun(id)` i data/mockRuns.ts: findIndex + splice tar bort
+  rundan ur listan, och saveRuns() sparar till disk
+- En "Ta bort runda"-knapp (Pressable) på detaljsidan som anropar
+  deleteRun() och sedan router.back(), med egen röd styling
+- useSafeAreaInsets() i index.tsx och paddingBottom: insets.bottom så
+  att knappen inte hamnar under telefonens hemknappsrad
+- Nya knapptexter och rubrik, plus en uppdaterad kommentar vid
+  accelerometern i new-run.tsx
