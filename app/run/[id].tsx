@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View } from "react-native";
-import { mockRuns } from "../../data/mockRuns";
-import { useLocalSearchParams } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { deleteRun, mockRuns } from "../../data/mockRuns";
+import { router, useLocalSearchParams } from "expo-router";
 
 // Filnamnet [id].tsx gör den här skärmen dynamisk: Expo Router matchar
 // t.ex. /run/1 och /run/2 mot samma fil, och skickar med "1" eller "2"
@@ -12,7 +12,7 @@ export default function RunDetailScreen() {
   if (!run) {
     return (
       <View style={styles.container}>
-        <Text>Hittade ingen löprunda med det id:t.</Text>
+        <Text>Hittade ingen löprunda med det id:t.💎🦄</Text>
       </View>
     );
   }
@@ -34,6 +34,13 @@ export default function RunDetailScreen() {
       Väder: {run.weather.tempC}°C, vind {run.weather.windSpeedMs} m/s
       </Text>
       )}
+      
+      <Pressable style={styles.deleteButton} onPress={() => {
+        deleteRun(run.id);
+        router.back();
+      }}>
+      <Text style={styles.deleteButtonText}>Ta bort runda💎🦄</Text>
+      </Pressable>
       </View>
   );
 }
@@ -50,9 +57,24 @@ const styles = StyleSheet.create({
     color: "#666",
     marginBottom: 12,
   },
+  
   stat: {
     fontSize: 24,
     fontWeight: "700",
     marginBottom: 6,
   },
+
+    deleteButton: {
+    backgroundColor: "#c0392b",
+    borderRadius: 12,
+    padding: 16,
+    alignItems: "center",
+    marginTop: 32,
+  },
+  deleteButtonText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+
 });

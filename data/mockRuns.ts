@@ -35,3 +35,14 @@ export function addRun(run: Run) {
   mockRuns.unshift(run);
   saveRuns();
 }
+
+// Tar bort rundan med ett visst id och sparar den uppdaterade listan
+// till disk.
+export function deleteRun(id: string) {
+  const index = mockRuns.findIndex((r) => r.id === id);
+  if (index !== -1) {
+    mockRuns.splice(index, 1);
+  }
+
+  saveRuns();
+}
