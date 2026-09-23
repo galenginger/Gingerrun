@@ -452,3 +452,31 @@ Tittade på ikonen och kollade att appen startar som vanligt i Expo Go.
 
 **Vad jag ändrade eller la till själv:**
 Inget i koden – ren grafik och konfiguration.
+
+---
+
+## 2026-09-23 – Statistiksida med veckodiagram
+
+**Vad jag bad om:**
+En statistiksida (fanns med i min ursprungliga projektplan) med
+sammanfattning av alla rundor och km per vecka som staplar, utan nya
+bibliotek.
+
+**Vad AI:n gav mig / gjorde:**
+- Skelett för app/statistics.tsx med styling och en ikon-knapp på
+  startsidan som navigerar dit, plus rubrik i _layout.tsx
+- components/WeekBar.tsx: stapelkomponent som tar emot data via props
+- utils/stats.ts: getWeeklyKm() som summerar km per vecka de senaste
+  6 veckorna med svenska veckonummer (datumlogik, ren hjälpkod)
+- Ett färdigt exempel (totalMin med reduce) och tre TODO (DU)
+- Steg-för-steg-vägledning när jag körde fast
+
+**Hur jag verifierade det:**
+npx tsc --noEmit utan fel. (Fyll i: testade sidan i Expo Go.)
+
+**Vad jag ändrade eller la till själv:**
+- totalKm med reduce, efter mönstret från totalMin
+- Längsta rundan med runs.map() och Math.max(0, ...distances), där
+  0:an gör att det blir 0 i stället för -Infinity utan rundor
+- Stapelhöjden i WeekBar: (km / maxKm) * MAX_HEIGHT med en ternary som
+  ger 0 om maxKm är 0 (annars 0 / 0 = NaN)

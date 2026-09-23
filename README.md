@@ -8,7 +8,9 @@ i kursen Applikationsutveckling (APP).
 GingerRun är till för dig som vill logga dina löprundor snabbt och enkelt.
 Du registrerar distans och tid, hämtar valfritt din position och det
 aktuella vädret, och kan i efterhand bläddra i en lista av tidigare rundor
-med detaljer om varje pass. Rundor du inte vill ha kvar kan du ta bort.
+med detaljer om varje pass. Rundor du inte vill ha kvar kan du ta bort,
+och på statistiksidan ser du din totala distans, ditt snittempo och hur
+många km du sprungit per vecka.
 Rundorna sparas på enheten och finns kvar mellan app-starter.
 
 ## Så bygger och kör du projektet
@@ -39,6 +41,7 @@ Rundorna sparas på enheten och finns kvar mellan app-starter.
 | `Pressable` | Alla knappar: spara runda, navigera, hämta position, ta bort runda |
 | `TextInput` | Mata in distans och tid för en ny löprunda |
 | `FlatList` | Listar sparade löprundor på startsidan |
+| `ScrollView` | Gör statistiksidan scrollbar |
 
 ## Använda Expo SDK-moduler
 
@@ -73,6 +76,8 @@ Appen använder Expo Router för filbaserad navigation:
 - `/new-run` – formulär för att skapa en ny löprunda
 - `/run/[id]` – detaljsida för en specifik runda, tar emot rundans id som
   parameter via `useLocalSearchParams()`
+- `/statistics` – statistik över alla rundor: totalt, snittempo, längsta
+  runda och km per vecka
 
 ## Projektstruktur
 
@@ -81,8 +86,10 @@ app/            Skärmar. Expo Router gör varje fil här till en sida.
   index.tsx       Startsida med listan över löprundor
   new-run.tsx     Formulär för att skapa en ny löprunda
   run/[id].tsx    Detaljsida för en runda, tar emot id som parameter
+  statistics.tsx  Statistik och veckodiagram
 components/     Återanvändbara UI-delar
   RunListItem.tsx En rad i listan på startsidan (tar emot en runda via props)
+  WeekBar.tsx     En stapel i veckodiagrammet (tar emot km och maxKm via props)
 services/       Kod som pratar med telefonen eller internet, utan UI
   location.ts     Hämtar positionen med expo-location
   weather.ts      Hämtar väder från Open-Meteo
@@ -94,6 +101,7 @@ constants/
   theme.ts        Färger, typsnitt och avstånd som alla skärmar delar
 utils/
   format.ts       Gör om data till text: datum, tempo, decimaltecken
+  stats.ts        Räknar ut km per vecka till statistiksidan
 ```
 
 Skärmarna i `app/` innehåller bara det som syns på skärmen. Allt annat

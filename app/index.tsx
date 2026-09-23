@@ -30,7 +30,16 @@ export default function HomeScreen() {
         { paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.md },
       ]}
     >
-      <Text style={styles.title}>GingerRun</Text>
+      <View style={styles.titleRow}>
+        <Text style={styles.title}>GingerRun</Text>
+        <Pressable
+          onPress={() => router.push("/statistics")}
+          hitSlop={12}
+          style={({ pressed }) => [styles.statsButton, pressed && styles.buttonPressed]}
+        >
+          <Ionicons name="stats-chart" size={22} color={colors.pine} />
+        </Pressable>
+      </View>
       <Text style={styles.summary}>
         {runs.length} {runs.length === 1 ? "runda" : "rundor"} ·{" "}
         {formatKm(roundedTotal)} km totalt
@@ -72,6 +81,16 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: colors.field,
+  },
+  titleRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  statsButton: {
+    backgroundColor: colors.lane,
+    borderRadius: radius,
+    padding: spacing.sm + 2,
   },
   title: {
     fontFamily: fonts.display,
