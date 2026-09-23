@@ -9,8 +9,7 @@ GingerRun är till för dig som vill logga dina löprundor snabbt och enkelt.
 Du registrerar distans och tid, hämtar valfritt din position och det
 aktuella vädret, och kan i efterhand bläddra i en lista av tidigare rundor
 med detaljer om varje pass. Rundor du inte vill ha kvar kan du ta bort.
-Rundorna sparas på enheten och finns kvar
-mellan app-starter.
+Rundorna sparas på enheten och finns kvar mellan app-starter.
 
 ## Så bygger och kör du projektet
 
@@ -61,7 +60,10 @@ rundans detaljsida.
 `react-native-confetti-cannon` från
 [reactnative.directory](https://reactnative.directory/).
 
-lagt till en konfetti modul som visar lite rolig konfetti på skärmen när man sparar en ny runda.
+Visar konfetti på skärmen när man sparar en ny löprunda, som en liten
+belöning för passet. Modulen är skriven i ren JavaScript utan egen
+native-kod, så den fungerar i Expo Go och påverkas inte av React Natives
+New Architecture.
 
 ## Navigering
 
@@ -71,6 +73,28 @@ Appen använder Expo Router för filbaserad navigation:
 - `/new-run` – formulär för att skapa en ny löprunda
 - `/run/[id]` – detaljsida för en specifik runda, tar emot rundans id som
   parameter via `useLocalSearchParams()`
+
+## Projektstruktur
+
+```
+app/            Skärmar. Expo Router gör varje fil här till en sida.
+  index.tsx       Startsida med listan över löprundor
+  new-run.tsx     Formulär för att skapa en ny löprunda
+  run/[id].tsx    Detaljsida för en runda, tar emot id som parameter
+components/     Återanvändbara UI-delar
+  RunListItem.tsx En rad i listan på startsidan (tar emot en runda via props)
+services/       Kod som pratar med telefonen eller internet, utan UI
+  location.ts     Hämtar positionen med expo-location
+  weather.ts      Hämtar väder från Open-Meteo
+data/
+  runs.ts         Håller listan med rundor och sparar/läser den från disk
+types/
+  run.ts          TypeScript-typerna Run, Coords och Weather
+```
+
+Skärmarna i `app/` innehåller bara det som syns på skärmen. Allt annat
+ligger utanför `app/`, eftersom Expo Router annars skulle tolka filerna
+som egna sidor.
 
 ## Uppfyllda krav
 
