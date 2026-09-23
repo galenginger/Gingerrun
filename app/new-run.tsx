@@ -119,7 +119,8 @@ export default function NewRunScreen() {
           const newRun: Run = {
             id: Date.now().toString(), // Enkelt unikt id.
             date: new Date().toISOString().slice(0, 10), // Dagens Datum
-            distanceKm: parseFloat(distance) || 0, // Text -> Nummer
+            // Svenskt tangentbord ger "5,2" – byt kommat mot punkt först.
+            distanceKm: parseFloat(distance.replace(",", ".")) || 0,
             durationMin: parseInt(duration, 10) || 0,
             location: location ?? undefined, // Platstjänster
             weather: weather ?? undefined,

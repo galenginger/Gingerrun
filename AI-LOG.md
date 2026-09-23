@@ -387,3 +387,22 @@ testade alla skärmar i Expo Go.
 
 **Vad jag ändrade eller la till själv:**
 Inga ändringar än, kommer framöver.
+
+---
+
+## 2026-09-23 – Buggfix: decimalkomma i distansen
+
+**Vad jag bad om:**
+AI:n påpekade att svenska tangentbord skriver "5,2" med komma, och att
+parseFloat("5,2") ger 5 eftersom den slutar läsa vid kommat.
+
+**Vad AI:n gav mig / gjorde:**
+En TODO med ledtråd (.replace) och ett liknande exempel. När jag körde
+fast skrev AI:n raden parseFloat(distance.replace(",", ".")) åt mig.
+
+**Hur jag verifierade det:**
+Skrev in 5,2 i appen, sparade och kollade att listan visade 5,2 km.
+
+**Vad jag ändrade eller la till själv:**
+Förklarade raden tillbaka: replace byter kommat mot en punkt, sedan gör
+parseFloat om texten till ett nummer, och || 0 ger 0 om fältet är tomt.
