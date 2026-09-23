@@ -193,3 +193,32 @@ run.location. Fick reda ut några JSX-strul på vägen (en extra
 oavslutad <View>, saknad stängning av både villkorsblocket och hela
 return-satsen). Lade även till en "Koordinater:"-etikett framför
 platsen på egen hand.
+
+---
+
+## 2026-09-23 – Konfetti vid sparad runda (VG: extern modul)
+
+**Vad jag bad om:**
+Den sista VG-biten: en extra extern modul från reactnative.directory
+som fyller en faktisk funktion. Valde en firningsanimation när en
+runda sparas.
+
+**Vad AI:n gav mig / gjorde:**
+- Kontrollerade react-native-confetti-cannon innan installation: ren
+  JS utan native-kod, funkar därför i Expo Go och påverkas inte av
+  New Architecture
+- Installerade paketet
+- setTimeout(() => router.back(), 1500) i new-run.tsx så navigeringen
+  väntar in konfettin, ren boilerplate
+- TODO (DU) för useState samt att trigga och rendera konfettin
+
+**Hur jag verifierade det:**
+Körde appen, sparade en löprunda och såg konfettin animera innan jag
+navigerades tillbaka till startsidan.
+
+**Vad jag ändrade eller la till själv:**
+Skrev useState för showConfetti, satte showConfetti(true) i
+"Spara löprunda"-knappen, och den villkorliga renderingen
+{showConfetti && (<ConfettiCannon .../>)}. Fick först en useState
+felplacerad inuti Accelerometer-callbacken (bryter mot Rules of
+Hooks) — flyttade den till rätt plats i komponentens kropp.

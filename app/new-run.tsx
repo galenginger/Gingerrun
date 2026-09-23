@@ -4,6 +4,7 @@ import { router } from "expo-router";
 import * as Haptics from "expo-haptics";
 import * as Location from "expo-location";
 import { Accelerometer } from "expo-sensors";
+import ConfettiCannon from "react-native-confetti-cannon";
 import { addRun } from "../data/mockRuns";
 import { Run } from "../types/run";
 
@@ -51,6 +52,7 @@ export default function NewRunScreen() {
   const [duration, setDuration] = useState("");
   const [location, setLocation] = useState<Coords | null>(null);
   const lastShakeAt = useRef(0);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // Prenumererar på accelerometern och räknar ut "rörelsestyrkan" (g).
   // Expo SDK-boilerplate (subscription + cleanup), inget att skriva
@@ -60,7 +62,10 @@ export default function NewRunScreen() {
     const subscription = Accelerometer.addListener(({ x, y, z }) => {
       const strength = Math.sqrt(x * x + y * y + z * z);
       const now = Date.now();
-      if (strength > SHAKE_THRESHOLD && now - lastShakeAt.current > SHAKE_COOLDOWN_MS) {
+      if (
+        strength > SHAKE_THRESHOLD &&
+        now - lastShakeAt.current > SHAKE_COOLDOWN_MS
+      ) {
         lastShakeAt.current = now;
         clearForm();
       }
@@ -129,11 +134,18 @@ export default function NewRunScreen() {
           // .then(() => console.log("Haptics klart"))
           // .catch((err) => console.log("Haptics fel:", err));
 
-          router.back();
+          setShowConfetti(true);
+          // Väntar 1,5 sekunder så konfettin hinner synas innan vi
+          // navigerar tillbaka till startsidan. Boilerplate (setTimeout).
+          setTimeout(() => router.back(), 1500);
         }}
       >
         <Text style={styles.buttonText}>Spara löprunda</Text>
       </Pressable>
+
+      {showConfetti && (
+        <ConfettiCannon count={200} origin={{ x: 200, y: 0 }} fadeOut />
+      )}
     </View>
   );
 }
