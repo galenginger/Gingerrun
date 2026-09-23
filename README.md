@@ -8,7 +8,8 @@ i kursen Applikationsutveckling (APP).
 GingerRun är till för dig som vill logga dina löprundor snabbt och enkelt.
 Du registrerar distans och tid, hämtar valfritt din position och det
 aktuella vädret, och kan i efterhand bläddra i en lista av tidigare rundor
-med detaljer om varje pass. Rundorna sparas på enheten och finns kvar
+med detaljer om varje pass. Rundor du inte vill ha kvar kan du ta bort.
+Rundorna sparas på enheten och finns kvar
 mellan app-starter.
 
 ## Så bygger och kör du projektet
@@ -36,7 +37,7 @@ mellan app-starter.
 |---|---|
 | `View` | Layout/behållare för alla skärmar |
 | `Text` | All text: rubriker, statistik, etiketter |
-| `Pressable` | Alla knappar: spara runda, navigera, hämta position/väder |
+| `Pressable` | Alla knappar: spara runda, navigera, hämta position, ta bort runda |
 | `TextInput` | Mata in distans och tid för en ny löprunda |
 | `FlatList` | Listar sparade löprundor på startsidan |
 
@@ -54,6 +55,13 @@ mellan app-starter.
 Väderdata hämtas från [Open-Meteo](https://open-meteo.com/) baserat på
 positionen som sparas på rundan (temperatur och vindstyrka), och visas på
 rundans detaljsida.
+
+## Extern modul
+
+`react-native-confetti-cannon` från
+[reactnative.directory](https://reactnative.directory/).
+
+lagt till en konfetti modul som visar lite rolig konfetti på skärmen när man sparar en ny runda.
 
 ## Navigering
 
@@ -79,7 +87,7 @@ Appen använder Expo Router för filbaserad navigation:
 ### Väl godkänt (VG)
 
 - [x] Alla G-krav uppfyllda
-- [ ] Extra extern modul från reactnative.directory
+- [x] Extra extern modul från reactnative.directory (`react-native-confetti-cannon`)
 - [x] Web API (väderdata från Open-Meteo)
 - [x] AI-användning dokumenterad (se nedan och [AI-LOG.md](AI-LOG.md))
 
