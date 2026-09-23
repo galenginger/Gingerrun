@@ -75,8 +75,7 @@ export default function NewRunScreen() {
   const [showConfetti, setShowConfetti] = useState(false);
 
   // Prenumererar på accelerometern och räknar ut "rörelsestyrkan" (g).
-  // Expo SDK-boilerplate (subscription + cleanup), inget att skriva
-  // själv här — TODO:n finns i clearForm() nedan istället.
+  // Skakar man telefonen tillräckligt hårt nollställs formuläret.
   useEffect(() => {
     Accelerometer.setUpdateInterval(200);
     const subscription = Accelerometer.addListener(({ x, y, z }) => {
@@ -160,7 +159,7 @@ export default function NewRunScreen() {
           setTimeout(() => router.back(), 1500);
         }}
       >
-        <Text style={styles.buttonText}>Spara löprunda</Text>
+        <Text style={styles.buttonText}>Spara Löprunda💎🦄</Text>
       </Pressable>
 
       {showConfetti && (
