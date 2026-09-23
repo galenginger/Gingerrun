@@ -430,3 +430,25 @@ Skrev const km och if (km === 0) return; i new-run.tsx, och bytte
 distanceKm till att använda km. Byggde Alert.alert med titel, text och
 de två knapparna i run/[id].tsx. Förklarade tillbaka att onPress i
 knappen är en callback som körs först när man trycker, inte direkt.
+
+---
+
+## 2026-09-23 – Egen app-ikon och splash-skärm
+
+**Vad jag bad om:**
+Byta ut Expos standardikon mot en egen som matchar appens design.
+
+**Vad AI:n gav mig / gjorde:**
+- Ritade ikonen med ett Python-skript (Pillow): en löparbana i ginger
+  med vit banlinje på pine-grön bakgrund, samma färger som
+  constants/theme.ts
+- Skapade alla varianter i assets/ (icon, Android adaptive
+  foreground/background/monochrome, splash, favicon)
+- Installerade expo-splash-screen och konfigurerade ikon och splash i
+  app.json
+
+**Hur jag verifierade det:**
+Tittade på ikonen och kollade att appen startar som vanligt i Expo Go.
+
+**Vad jag ändrade eller la till själv:**
+Inget i koden – ren grafik och konfiguration.
