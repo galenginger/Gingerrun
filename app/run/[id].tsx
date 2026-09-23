@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -17,13 +17,17 @@ export default function RunDetailScreen() {
   if (!run) {
     return (
       <View style={styles.container}>
-        <Text style={styles.notFound}>Hittade ingen löprunda med det id:t.</Text>
+        <Text style={styles.notFound}>
+          Hittade ingen löprunda med det id:t.
+        </Text>
       </View>
     );
   }
 
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom + spacing.md }]}>
+    <View
+      style={[styles.container, { paddingBottom: insets.bottom + spacing.md }]}
+    >
       <Text style={styles.date}>{formatDate(run.date)}</Text>
 
       <Text style={styles.hero}>
@@ -46,7 +50,11 @@ export default function RunDetailScreen() {
 
       {run.weather && (
         <View style={styles.infoRow}>
-          <Ionicons name="partly-sunny-outline" size={22} color={colors.ginger} />
+          <Ionicons
+            name="partly-sunny-outline"
+            size={22}
+            color={colors.ginger}
+          />
           <Text style={styles.infoText}>
             {run.weather.tempC}°C, vind {run.weather.windSpeedMs} m/s
           </Text>
@@ -57,7 +65,8 @@ export default function RunDetailScreen() {
         <View style={styles.infoRow}>
           <Ionicons name="location-outline" size={22} color={colors.ginger} />
           <Text style={styles.infoText}>
-            {run.location.latitude.toFixed(4)}, {run.location.longitude.toFixed(4)}
+            {run.location.latitude.toFixed(4)},{" "}
+            {run.location.longitude.toFixed(4)}
           </Text>
         </View>
       )}
@@ -65,10 +74,23 @@ export default function RunDetailScreen() {
       <View style={styles.spacer} />
 
       <Pressable
-        style={({ pressed }) => [styles.deleteButton, pressed && styles.pressed]}
+        style={({ pressed }) => [
+          styles.deleteButton,
+          pressed && styles.pressed,
+        ]}
         onPress={() => {
-          deleteRun(run.id);
-          router.back();
+          // Fråga först – rundan tas bara bort om man trycker "Ta bort".
+          Alert.alert("Ta bort runda?", "Det går inte att ångra.", [
+            { text: "Avbryt", style: "cancel" },
+            {
+              text: "Ta bort",
+              style: "destructive",
+              onPress: () => {
+                deleteRun(run.id);
+                router.back();
+              },
+            },
+          ]);
         }}
       >
         <Ionicons name="trash-outline" size={20} color={colors.danger} />

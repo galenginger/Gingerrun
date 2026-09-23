@@ -406,3 +406,27 @@ Skrev in 5,2 i appen, sparade och kollade att listan visade 5,2 km.
 **Vad jag ändrade eller la till själv:**
 Förklarade raden tillbaka: replace byter kommat mot en punkt, sedan gör
 parseFloat om texten till ett nummer, och || 0 ger 0 om fältet är tomt.
+
+---
+
+## 2026-09-23 – Spärra tomma rundor och bekräfta borttagning
+
+**Vad jag bad om:**
+Skydda demon mot två misstag: att spara en runda med 0 km, och att
+råka ta bort en runda med ett felklick.
+
+**Vad AI:n gav mig / gjorde:**
+- TODO:s med steg-för-steg-vägledning i new-run.tsx och run/[id].tsx,
+  och importerade Alert
+- När jag klistrat in deleteRun/router.back() på fel ställe skrev AI:n
+  den färdiga Alert-knappen med onPress åt mig
+
+**Hur jag verifierade det:**
+Tryckte "Spara" med tomt distansfält och såg att inget hände. Testade
+Avbryt (rundan var kvar) och Ta bort (rundan försvann) i Alert-rutan.
+
+**Vad jag ändrade eller la till själv:**
+Skrev const km och if (km === 0) return; i new-run.tsx, och bytte
+distanceKm till att använda km. Byggde Alert.alert med titel, text och
+de två knapparna i run/[id].tsx. Förklarade tillbaka att onPress i
+knappen är en callback som körs först när man trycker, inte direkt.

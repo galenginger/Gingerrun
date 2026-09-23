@@ -107,20 +107,28 @@ export default function NewRunScreen() {
       <View style={styles.spacer} />
 
       <View style={styles.hintRow}>
-        <Ionicons name="phone-portrait-outline" size={16} color={colors.muted} />
+        <Ionicons
+          name="phone-portrait-outline"
+          size={16}
+          color={colors.muted}
+        />
         <Text style={styles.hint}>Skaka telefonen för att rensa</Text>
       </View>
 
       <Pressable
         style={({ pressed }) => [styles.button, pressed && styles.pressed]}
         onPress={async () => {
+          // Svenskt tangentbord ger "5,2" – byt kommat mot punkt först.
+          const km = parseFloat(distance.replace(",", ".")) || 0;
+          // Ingen distans = inget att spara.
+          if (km === 0) return;
+
           const weather = location ? await getCurrentWeather(location) : null;
 
           const newRun: Run = {
             id: Date.now().toString(), // Enkelt unikt id.
             date: new Date().toISOString().slice(0, 10), // Dagens Datum
-            // Svenskt tangentbord ger "5,2" – byt kommat mot punkt först.
-            distanceKm: parseFloat(distance.replace(",", ".")) || 0,
+            distanceKm: km,
             durationMin: parseInt(duration, 10) || 0,
             location: location ?? undefined, // Platstjänster
             weather: weather ?? undefined,
