@@ -55,7 +55,7 @@ async function getCurrentLocation(): Promise<Coords | null> {
 // API-nyckel behövs). Web API-anrop + JSON-hantering, ren boilerplate.
 async function getCurrentWeather(coords: Coords): Promise<Weather | null> {
   try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&current_weather=true`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&current_weather=true&windspeed_unit=ms`;
     const response = await fetch(url);
     const data = await response.json();
     return {

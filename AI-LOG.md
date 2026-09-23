@@ -293,3 +293,23 @@ knappen på startsidan inte längre hamnade under hemknappsraden.
   att knappen inte hamnar under telefonens hemknappsrad
 - Nya knapptexter och rubrik, plus en uppdaterad kommentar vid
   accelerometern i new-run.tsx
+
+---
+
+## 2026-09-23 – Buggfix: vindhastighet i fel enhet
+
+**Vad jag bad om:**
+Inget. AI:n hittade buggen när vi övade inför presentationen.
+
+**Vad AI:n gav mig / gjorde:**
+Påpekade att Open-Meteo skickar vindhastigheten i km/h som standard,
+men att detaljsidan visar den som m/s. Tipsade om att API:et har en
+parameter windspeed_unit som ska sättas till ms, men skrev inte koden.
+
+**Hur jag verifierade det:**
+Sparade en ny runda och jämförde vindhastigheten på detaljsidan med
+en väderapp.
+
+**Vad jag ändrade eller la till själv:**
+Lade till &windspeed_unit=ms i slutet av URL:en i
+getCurrentWeather() i new-run.tsx.
