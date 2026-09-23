@@ -6,8 +6,7 @@ import { Accelerometer } from "expo-sensors";
 import ConfettiCannon from "react-native-confetti-cannon";
 import { Ionicons } from "@expo/vector-icons";
 import { addRun } from "../data/runs";
-import { Run } from "../types/run";
-import { Coords } from "../types/run";
+import { Coords, Run } from "../types/run";
 import { getCurrentWeather } from "../services/weather";
 import { getCurrentLocation } from "../services/location";
 import { colors, fonts, radius, spacing } from "../constants/theme";
@@ -127,14 +126,11 @@ export default function NewRunScreen() {
           };
           addRun(newRun);
 
-          // console.log("Provar haptics...");
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-          // .then(() => console.log("Haptics klart"))
-          // .catch((err) => console.log("Haptics fel:", err));
 
           setShowConfetti(true);
           // Väntar 1,5 sekunder så konfettin hinner synas innan vi
-          // navigerar tillbaka till startsidan. Boilerplate (setTimeout).
+          // navigerar tillbaka till startsidan.
           setTimeout(() => router.back(), 1500);
         }}
       >

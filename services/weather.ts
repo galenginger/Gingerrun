@@ -1,7 +1,8 @@
 import { Coords, Weather } from "../types/run";
 
 // Hämtar aktuellt väder för en position från Open-Meteo (gratis, ingen
-// API-nyckel behövs). Web API-anrop + JSON-hantering, ren boilerplate.
+// API-nyckel behövs). Returnerar null om anropet misslyckas, t.ex. utan
+// internet.
 export async function getCurrentWeather(coords: Coords): Promise<Weather | null> {
   try {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.latitude}&longitude=${coords.longitude}&current_weather=true&windspeed_unit=ms`;

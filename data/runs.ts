@@ -13,7 +13,6 @@ const runsFile = new File(Paths.document, "runs.json");
 
 // Läser sparade rundor från disk (om filen finns) och fyller savedRuns
 // med dem, så samma array-referens fortfarande delas mellan skärmarna.
-// Expo SDK-boilerplate, inget att skriva själv här.
 export function loadRuns(): Run[] {
   if (runsFile.exists) {
     const saved: Run[] = JSON.parse(runsFile.textSync());

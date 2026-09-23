@@ -1,8 +1,8 @@
 import * as Location from "expo-location";
 import { Coords } from "../types/run";
 
-// Frågar om lov och hämtar nuvarande position. Expo SDK-boilerplate:
-// två await-anrop mot expo-location, inget att skriva själv här.
+// Frågar om lov och hämtar nuvarande position med expo-location.
+// Returnerar null om användaren nekar eller om ingen position hittas.
 export async function getCurrentLocation(): Promise<Coords | null> {
   const { status } = await Location.requestForegroundPermissionsAsync();
   if (status !== "granted") return null;
