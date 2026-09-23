@@ -9,7 +9,7 @@ Läs frågan, försök svara högt själv, titta sedan på svaret.
 
 ```ts
 const { id } = useLocalSearchParams();
-const run = mockRuns.find((r) => r.id === id);
+const run = savedRuns.find((r) => r.id === id);
 ```
 
 **Mitt svar:**
@@ -56,13 +56,13 @@ Utan parentes skickas funktionen och körs bara första gången.
 
 ---
 
-## 4. Varför `setRuns([...mockRuns])` och inte `setRuns(mockRuns)`?
+## 4. Varför `setRuns([...savedRuns])` och inte `setRuns(savedRuns)`?
 
 **Mitt svar:**
 Den skapar en ny array så React märker ändringen.
 
 **Lägg till:**
-- React jämför med **referens**. `addRun()` gör `mockRuns.unshift(run)`,
+- React jämför med **referens**. `addRun()` gör `savedRuns.unshift(run)`,
   alltså ändrar den samma array. Samma referens = React tror att
   inget har ändrats och ritar inte om listan.
 - `...` (spread) kopierar alla element in i en ny array, och då har den

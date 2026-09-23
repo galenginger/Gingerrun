@@ -337,3 +337,25 @@ position och spara en runda med väder.
 **Vad jag ändrade eller la till själv:**
 Skrev import-raderna för Coords, getCurrentLocation och
 getCurrentWeather i new-run.tsx.
+
+---
+
+## 2026-09-23 – Döpa om mockRuns till runs/savedRuns
+
+**Vad jag bad om:**
+Filen data/mockRuns.ts sparar riktiga rundor på disk, inte bara
+testdata, så namnet var missvisande.
+
+**Vad AI:n gav mig / gjorde:**
+Döpte om filen till data/runs.ts med git mv och variabeln mockRuns
+till savedRuns inne i filen. Uppdaterade kommentaren och
+övningsfrågorna till det nya namnet.
+
+**Hur jag verifierade det:**
+Körde npx tsc --noEmit tills alla fel var borta, och kollade att inget
+"mockRuns" fanns kvar i koden.
+
+**Vad jag ändrade eller la till själv:**
+Uppdaterade importerna i index.tsx, new-run.tsx och run/[id].tsx till
+den nya sökvägen, bytte mockRuns mot savedRuns där variabeln används,
+och slog ihop loadRuns och savedRuns till en import-rad i index.tsx.

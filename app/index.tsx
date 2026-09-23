@@ -3,8 +3,8 @@ import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import RunListItem from "../components/RunListItem";
 import { Run } from "../types/run";
-import { loadRuns, mockRuns } from "../data/mockRuns";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { savedRuns, loadRuns } from "../data/runs";
 
 export default function HomeScreen() {
   const [runs, setRuns] = useState<Run[]>(loadRuns);
@@ -12,7 +12,7 @@ export default function HomeScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      setRuns([...mockRuns]);
+      setRuns([...savedRuns]);
     }, []),
   );
 

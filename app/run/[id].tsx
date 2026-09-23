@@ -1,13 +1,13 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { deleteRun, mockRuns } from "../../data/mockRuns";
 import { router, useLocalSearchParams } from "expo-router";
+import { savedRuns, deleteRun } from "../../data/runs";
 
 // Filnamnet [id].tsx gör den här skärmen dynamisk: Expo Router matchar
 // t.ex. /run/1 och /run/2 mot samma fil, och skickar med "1" eller "2"
 // som en URL-parameter vi kan läsa ut.
 export default function RunDetailScreen() {
   const { id } = useLocalSearchParams();
-  const run = mockRuns.find((r) => r.id === id);
+  const run = savedRuns.find((r) => r.id === id);
 
   if (!run) {
     return (

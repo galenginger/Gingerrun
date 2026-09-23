@@ -4,7 +4,7 @@ import { router } from "expo-router";
 import * as Haptics from "expo-haptics";
 import { Accelerometer } from "expo-sensors";
 import ConfettiCannon from "react-native-confetti-cannon";
-import { addRun } from "../data/mockRuns";
+import { addRun } from "../data/runs";
 import { Run } from "../types/run";
 import { Coords } from "../types/run";
 import { getCurrentWeather } from "../services/weather";
