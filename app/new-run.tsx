@@ -21,14 +21,34 @@ const SHAKE_COOLDOWN_MS = 1000;
 // två await-anrop mot expo-location, inget att skriva själv här.
 async function getCurrentLocation(): Promise<Coords | null> {
   const { status } = await Location.requestForegroundPermissionsAsync();
-  if (status !== "granted") {
+  if (status !== "granted") return null;
+
+  // Läser telefonens senast kända (cachade) position. Svarar direkt och
+  // väcker aldrig GPS:en - det är GPS-fixen som kan hänga sig och kräva
+  // omstart av appen, så vi ber bara om en ny fix när cachen är tom.
+  const lastKnown = await Location.getLastKnownPositionAsync();
+
+  if (lastKnown) {
+    return {
+      latitude: lastKnown.coords.latitude,
+      longitude: lastKnown.coords.longitude,
+    };
+  }
+
+  try {
+    const position = await Promise.race([
+      Location.getCurrentPositionAsync({}),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Timeout")), 8000),
+      ),
+    ]);
+    return {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+    };
+  } catch {
     return null;
   }
-  const position = await Location.getCurrentPositionAsync({});
-  return {
-    latitude: position.coords.latitude,
-    longitude: position.coords.longitude,
-  };
 }
 
 // Hämtar aktuellt väder för en position från Open-Meteo (gratis, ingen

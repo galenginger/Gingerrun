@@ -222,3 +222,40 @@ Skrev useState för showConfetti, satte showConfetti(true) i
 {showConfetti && (<ConfettiCannon .../>)}. Fick först en useState
 felplacerad inuti Accelerometer-callbacken (bryter mot Rules of
 Hooks) — flyttade den till rätt plats i komponentens kropp.
+
+---
+
+## 2026-09-23 – Buggfix: position gick inte att hämta en andra gång
+
+**Vad jag bad om:**
+Jag hittade själv en bugg: efter att ha hämtat position och sparat en
+runda gick det inte att hämta position igen — hela appen behövde
+startas om. Bad AI:n lokalisera felet och ge mig ett skelett, inte
+ett färdigt svar.
+
+**Vad AI:n gav mig / gjorde:**
+- Resonerade fram var felet kunde ligga: eftersom komponentens state
+  nollställs vid varje ny navigering måste problemet sitta utanför
+  React, i själva GPS-anropet
+- Föreslog en timeout (Promise.race) runt getCurrentPositionAsync som
+  första skyddsnät, så anropet aldrig kan hänga för evigt
+- När det inte räckte: föreslog console.log-rader för att bevisa
+  exakt var körningen fastnade
+- Hittade i Expos egen dokumentation att getCurrentPositionAsync begär
+  en helt ny GPS-fix och kan ta lång tid, och att
+  getLastKnownPositionAsync rekommenderas när hög precision inte krävs
+- Skrev till slut if (lastKnown)-blocket åt mig när jag kört fast, och
+  lät mig förklara ordningen tillbaka innan vi gick vidare
+
+**Hur jag verifierade det:**
+La in console.log före och efter varje await och läste terminalen:
+loggarna visade att permission gick igenom (status = granted) men att
+körningen aldrig kom förbi getCurrentPositionAsync. Efter fixen
+hämtades positionen direkt, även andra och tredje gången, utan omstart
+av appen.
+
+**Vad jag ändrade eller la till själv:**
+Körde felsökningen och läste loggarna, och kunde förklara varför
+if (lastKnown)-blocket måste ligga före try-blocket: return avbryter
+funktionen direkt, så cachen måste kollas innan reservlösningen med
+den långsamma GPS-fixen körs.
