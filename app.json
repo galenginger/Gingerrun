@@ -30,7 +30,8 @@
         {
           "locationAlwaysAndWhenInUsePermission": "GingerRun använder din position för att spara var löprundan gjordes."
         }
-      ]
+      ],
+      "expo-font"
     ]
   }
 }

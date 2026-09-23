@@ -359,3 +359,31 @@ Körde npx tsc --noEmit tills alla fel var borta, och kollade att inget
 Uppdaterade importerna i index.tsx, new-run.tsx och run/[id].tsx till
 den nya sökvägen, bytte mockRuns mot savedRuns där variabeln används,
 och slog ihop loadRuns och savedRuns till en import-rad i index.tsx.
+
+---
+
+## 2026-09-23 – Design och styling (branch `styling`)
+
+**Vad jag bad om:**
+Inlämningskraven var klara. Jag ville att appen skulle se ut som en
+färdig produkt och gav AI:n fria händer att styla den i en egen branch,
+så att master inte påverkades om jag inte gillade resultatet.
+
+**Vad AI:n gav mig / gjorde:**
+- Tog fram designriktningen "Löparbanan" med skillen frontend-design:
+  färger, typsnitt och en orange banlinje som signatur
+- Installerade expo-font, @expo-google-fonts/barlow,
+  @expo-google-fonts/barlow-condensed och @expo/vector-icons (alla
+  fungerar i Expo Go)
+- Skrev constants/theme.ts (färger, typsnitt, avstånd) och
+  utils/format.ts (datum, tempo, decimaltecken)
+- Skrev om stylingen i alla skärmar och i RunListItem, plus
+  typsnittsladdning och headers i _layout.tsx
+- Ingen logik ändrades (sparning, GPS, väder, skak, konfetti)
+
+**Hur jag verifierade det:**
+npx tsc --noEmit utan fel, testpaketering med npx expo export, och
+testade alla skärmar i Expo Go.
+
+**Vad jag ändrade eller la till själv:**
+Inga ändringar än, kommer framöver.

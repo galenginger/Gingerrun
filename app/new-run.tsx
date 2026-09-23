@@ -4,11 +4,13 @@ import { router } from "expo-router";
 import * as Haptics from "expo-haptics";
 import { Accelerometer } from "expo-sensors";
 import ConfettiCannon from "react-native-confetti-cannon";
+import { Ionicons } from "@expo/vector-icons";
 import { addRun } from "../data/runs";
 import { Run } from "../types/run";
 import { Coords } from "../types/run";
 import { getCurrentWeather } from "../services/weather";
 import { getCurrentLocation } from "../services/location";
+import { colors, fonts, radius, spacing } from "../constants/theme";
 
 // Hur kraftig rörelse (i g) som räknas som en skakning, och hur lång
 // paus (ms) som måste gå mellan två skakningar så det inte triggar flera
@@ -50,40 +52,68 @@ export default function NewRunScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Distans (km)</Text>
-      <TextInput
-        style={styles.input}
-        value={distance}
-        onChangeText={setDistance}
-        keyboardType="decimal-pad"
-        placeholder="5.2"
-      ></TextInput>
+      <View style={styles.fieldsRow}>
+        <View style={styles.field}>
+          <Text style={styles.label}>Distans</Text>
+          <View style={styles.inputBox}>
+            <TextInput
+              style={styles.input}
+              value={distance}
+              onChangeText={setDistance}
+              keyboardType="decimal-pad"
+              placeholder="5.2"
+              placeholderTextColor={colors.line}
+            ></TextInput>
+            <Text style={styles.inputUnit}>km</Text>
+          </View>
+        </View>
 
-      <Text style={styles.label}>Tid (minuter)</Text>
-      <TextInput
-        style={styles.input}
-        value={duration}
-        onChangeText={setDuration}
-        keyboardType="number-pad"
-      ></TextInput>
+        <View style={styles.field}>
+          <Text style={styles.label}>Tid</Text>
+          <View style={styles.inputBox}>
+            <TextInput
+              style={styles.input}
+              value={duration}
+              onChangeText={setDuration}
+              keyboardType="number-pad"
+              placeholder="30"
+              placeholderTextColor={colors.line}
+            ></TextInput>
+            <Text style={styles.inputUnit}>min</Text>
+          </View>
+        </View>
+      </View>
 
       <Pressable
-        style={styles.button}
+        style={({ pressed }) => [
+          styles.secondaryButton,
+          pressed && styles.pressed,
+        ]}
         onPress={async () => {
           const result = await getCurrentLocation();
           setLocation(result);
         }}
       >
-        <Text style={styles.buttonText}>Hämta position</Text>
+        <Ionicons name="location" size={20} color={colors.ginger} />
+        <Text style={styles.secondaryButtonText}>
+          {location ? "Uppdatera position" : "Hämta position"}
+        </Text>
       </Pressable>
-      <Text style={styles.label}>
+      <Text style={styles.locationText}>
         {location
-          ? `${location.latitude}, ${location.longitude}`
-          : "Ingen position hämtad"}
+          ? `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`
+          : "Ingen position hämtad. Med position sparas även vädret."}
       </Text>
 
+      <View style={styles.spacer} />
+
+      <View style={styles.hintRow}>
+        <Ionicons name="phone-portrait-outline" size={16} color={colors.muted} />
+        <Text style={styles.hint}>Skaka telefonen för att rensa</Text>
+      </View>
+
       <Pressable
-        style={styles.button}
+        style={({ pressed }) => [styles.button, pressed && styles.pressed]}
         onPress={async () => {
           const weather = location ? await getCurrentWeather(location) : null;
 
@@ -108,11 +138,17 @@ export default function NewRunScreen() {
           setTimeout(() => router.back(), 1500);
         }}
       >
-        <Text style={styles.buttonText}>Spara Löprunda💎🦄</Text>
+        <Ionicons name="checkmark" size={22} color={colors.pine} />
+        <Text style={styles.buttonText}>Spara löprunda</Text>
       </Pressable>
 
       {showConfetti && (
-        <ConfettiCannon count={200} origin={{ x: 200, y: 0 }} fadeOut />
+        <ConfettiCannon
+          count={200}
+          origin={{ x: 200, y: 0 }}
+          fadeOut
+          colors={[colors.ginger, colors.pine, colors.muted, "#F5C26B"]}
+        />
       )}
     </View>
   );
@@ -122,33 +158,97 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingTop: 40,
-    backgroundColor: "#f5f5f5",
+    paddingBottom: 40,
+    backgroundColor: colors.field,
+  },
+  fieldsRow: {
+    flexDirection: "row",
+    gap: spacing.md,
+  },
+  field: {
+    flex: 1,
   },
   label: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 6,
-    marginTop: 16,
+    fontFamily: fonts.bodyMedium,
+    fontSize: 15,
+    color: colors.muted,
+    marginBottom: spacing.xs + 2,
+  },
+  inputBox: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    backgroundColor: colors.lane,
+    borderRadius: radius,
+    borderWidth: 1,
+    borderColor: colors.line,
+    paddingHorizontal: spacing.md,
   },
   input: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 14,
-    fontSize: 18,
-    borderWidth: 1,
-    borderColor: "#eee",
+    flex: 1,
+    fontFamily: fonts.number,
+    fontSize: 40,
+    color: colors.pine,
+    paddingVertical: spacing.sm,
+  },
+  inputUnit: {
+    fontFamily: fonts.body,
+    fontSize: 16,
+    color: colors.muted,
+  },
+  secondaryButton: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: spacing.sm,
+    backgroundColor: colors.lane,
+    borderRadius: radius,
+    borderWidth: 2,
+    borderColor: colors.ginger,
+    paddingVertical: 14,
+    marginTop: spacing.lg,
+  },
+  secondaryButtonText: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 16,
+    color: colors.pine,
+  },
+  locationText: {
+    fontFamily: fonts.body,
+    fontSize: 14,
+    color: colors.muted,
+    marginTop: spacing.sm,
+    textAlign: "center",
+  },
+  spacer: {
+    flex: 1,
+  },
+  hintRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: spacing.xs + 2,
+    marginBottom: spacing.md,
+  },
+  hint: {
+    fontFamily: fonts.body,
+    fontSize: 14,
+    color: colors.muted,
   },
   button: {
-    backgroundColor: "#e8622c",
-    borderRadius: 12,
-    padding: 16,
+    flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
-    marginTop: 32,
+    gap: spacing.sm,
+    backgroundColor: colors.ginger,
+    borderRadius: radius,
+    paddingVertical: spacing.md,
   },
   buttonText: {
-    color: "#fff",
-    fontWeight: "600",
-    fontSize: 16,
+    fontFamily: fonts.bodyBold,
+    fontSize: 18,
+    color: colors.pine,
+  },
+  pressed: {
+    opacity: 0.8,
   },
 });

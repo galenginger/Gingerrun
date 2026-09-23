@@ -1,10 +1,13 @@
 import { useCallback, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { router, useFocusEffect } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import RunListItem from "../components/RunListItem";
 import { Run } from "../types/run";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { savedRuns, loadRuns } from "../data/runs";
+import { colors, fonts, radius, spacing } from "../constants/theme";
+import { formatKm } from "../utils/format";
 
 export default function HomeScreen() {
   const [runs, setRuns] = useState<Run[]>(loadRuns);
@@ -16,10 +19,23 @@ export default function HomeScreen() {
     }, []),
   );
 
-  
+  // Summerar alla rundors distans till en total, t.ex. 25.4 km.
+  const totalKm = runs.reduce((sum, run) => sum + run.distanceKm, 0);
+  const roundedTotal = Math.round(totalKm * 10) / 10;
+
   return (
-    <View style={[styles.container, {paddingBottom: insets.bottom}]}>
-      <Text style={styles.title}>💎🦄GingerRun💎🦄</Text>
+    <View
+      style={[
+        styles.container,
+        { paddingTop: insets.top + spacing.lg, paddingBottom: insets.bottom + spacing.md },
+      ]}
+    >
+      <Text style={styles.title}>GingerRun</Text>
+      <Text style={styles.summary}>
+        {runs.length} {runs.length === 1 ? "runda" : "rundor"} ·{" "}
+        {formatKm(roundedTotal)} km totalt
+      </Text>
+
       <FlatList
         data={runs}
         keyExtractor={(item) => item.id}
@@ -29,9 +45,23 @@ export default function HomeScreen() {
             onPress={() => router.push(`/run/${item.id}`)}
           />
         )}
+        ListEmptyComponent={
+          <View style={styles.empty}>
+            <Text style={styles.emptyTitle}>Inga rundor än</Text>
+            <Text style={styles.emptyText}>
+              Tryck på Ny löprunda för att logga ditt första pass.
+            </Text>
+          </View>
+        }
+        contentContainerStyle={styles.list}
       />
-      <Pressable style={styles.button} onPress={() => router.push("/new-run")}>
-        <Text style={styles.buttonText}> Spara Ny Löprunda!💎🦄</Text>
+
+      <Pressable
+        style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+        onPress={() => router.push("/new-run")}
+      >
+        <Ionicons name="add" size={24} color={colors.pine} />
+        <Text style={styles.buttonText}>Ny löprunda</Text>
       </Pressable>
     </View>
   );
@@ -40,25 +70,53 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    paddingTop: 60,
-    backgroundColor: "#f5f5f5",
+    paddingHorizontal: 20,
+    backgroundColor: colors.field,
   },
   title: {
-    fontSize: 28,
-    fontWeight: "700",
-    marginBottom: 20,
+    fontFamily: fonts.display,
+    fontSize: 48,
+    color: colors.pine,
+    lineHeight: 52,
+  },
+  summary: {
+    fontFamily: fonts.bodyMedium,
+    fontSize: 16,
+    color: colors.muted,
+    marginBottom: spacing.lg,
+  },
+  list: {
+    paddingBottom: spacing.md,
+  },
+  empty: {
+    paddingVertical: spacing.xl,
+  },
+  emptyTitle: {
+    fontFamily: fonts.number,
+    fontSize: 24,
+    color: colors.pine,
+    marginBottom: spacing.xs,
+  },
+  emptyText: {
+    fontFamily: fonts.body,
+    fontSize: 16,
+    color: colors.muted,
   },
   button: {
-    backgroundColor: "#e8622c",
-    borderRadius: 12,
-    padding: 16,
+    flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
-    marginTop: 12,
+    gap: spacing.sm,
+    backgroundColor: colors.ginger,
+    borderRadius: radius,
+    paddingVertical: spacing.md,
+  },
+  buttonPressed: {
+    opacity: 0.8,
   },
   buttonText: {
-    color: "#fff",
-    fontWeight: "600",
-    fontSize: 16,
+    fontFamily: fonts.bodyBold,
+    fontSize: 18,
+    color: colors.pine,
   },
 });

@@ -90,11 +90,25 @@ data/
   runs.ts         Håller listan med rundor och sparar/läser den från disk
 types/
   run.ts          TypeScript-typerna Run, Coords och Weather
+constants/
+  theme.ts        Färger, typsnitt och avstånd som alla skärmar delar
+utils/
+  format.ts       Gör om data till text: datum, tempo, decimaltecken
 ```
 
 Skärmarna i `app/` innehåller bara det som syns på skärmen. Allt annat
 ligger utanför `app/`, eftersom Expo Router annars skulle tolka filerna
 som egna sidor.
+
+## Design
+
+Appen har ett eget tema, "Löparbanan": en orange banlinje till vänster på
+varje runda och stora kondenserade siffror som på ett startnummer. Alla
+färger och typsnitt ligger i `constants/theme.ts`.
+
+- Typsnitt: Barlow och Barlow Condensed från Google Fonts, laddade med
+  `expo-font` och `@expo-google-fonts`
+- Ikoner: Ionicons från `@expo/vector-icons`
 
 ## Uppfyllda krav
 
@@ -126,6 +140,9 @@ kursens AI-regel: *"AI får skriva, du måste förstå och verifiera."*
   filer. Inlärningskritisk kod — `useState`, `Pressable`/`onPress`-logik,
   villkorlig rendering i JSX, styling — skrevs av mig själv, ofta utifrån
   en TODO-kommentar eller ett litet liknande exempel från Claude.
+  Undantaget är den slutliga designen (se Design ovan). När kraven var
+  klara lät jag Claude skriva den i en egen branch, som jag sedan gick
+  igenom och testade innan den slogs ihop.
 - **Hur koden verifierades:** appen kördes i Expo Go efter varje
   färdig del, och funktionerna testades manuellt (t.ex. spara en runda,
   skaka telefonen, stänga och öppna appen igen för att kontrollera att
