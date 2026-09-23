@@ -4,9 +4,11 @@ import { router, useFocusEffect } from "expo-router";
 import RunListItem from "../components/RunListItem";
 import { Run } from "../types/run";
 import { loadRuns, mockRuns } from "../data/mockRuns";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   const [runs, setRuns] = useState<Run[]>(loadRuns);
+  const insets = useSafeAreaInsets();
 
   useFocusEffect(
     useCallback(() => {
@@ -14,9 +16,10 @@ export default function HomeScreen() {
     }, []),
   );
 
+  
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>GingerRun</Text>
+    <View style={[styles.container, {paddingBottom: insets.bottom}]}>
+      <Text style={styles.title}>💎🦄GingerRun💎🦄</Text>
       <FlatList
         data={runs}
         keyExtractor={(item) => item.id}
@@ -28,7 +31,7 @@ export default function HomeScreen() {
         )}
       />
       <Pressable style={styles.button} onPress={() => router.push("/new-run")}>
-        <Text style={styles.buttonText}> + Ny Löprunda!</Text>
+        <Text style={styles.buttonText}> Spara Ny Löprunda!💎🦄</Text>
       </Pressable>
     </View>
   );
